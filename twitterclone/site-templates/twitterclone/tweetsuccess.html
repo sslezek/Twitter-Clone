@@ -1,0 +1,19 @@
+<!--{% load static from staticfiles %}-->
+
+<link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
+<body>
+<hr size=90>
+<h3> yo </h3>
+<h1 style="align:center;font-size:40;color:auto;"><strong> All Tweets </strong> </h1>
+{% if latest_tweet_list %}
+	{% for tweet in latest_tweet_list %}
+		<p style="margin-left:40px;font-size:12;color:green">@{{ tweet.tweeter }}</p>
+		<h1 style="margin-left:40px;font-size:20">{{ tweet.content }}</h1>
+		<br><br><br>
+
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>No tweets are available.</p>
+{% endif %}
+</body>

@@ -1,0 +1,13 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
+<hr size=90>
+
+{% if form.errors %}
+	<p class = 'error'> Sorry, error </p>
+{% endif %}
+
+	<form action="/make_tweet/" method='post'>{% csrf_token %}
+		<label for='username'><strong>Enter new tweet here (maximum 140 characters): </strong></label>
+		<input type='text' name='content' value='' id='content'>
+		<input type='submit' value='Compose' />
+	</form>

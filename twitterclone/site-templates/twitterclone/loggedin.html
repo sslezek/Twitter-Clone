@@ -1,0 +1,7 @@
+{% block content %}
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
+	<h2>Hi {{username}} you are now logged in!</h2>
+	<p>Click <a href="/logout">here</a> to log out </p>
+
+{% endblock %}

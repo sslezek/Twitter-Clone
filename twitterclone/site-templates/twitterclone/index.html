@@ -1,0 +1,11 @@
+
+<h1> hey welcome to my page </h1>
+{% if my_user_list %}
+    <ul>
+    {% for user in my_user_list %}
+        <li><a>{{ user.username }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No users are available.</p>
+{% endif %}
