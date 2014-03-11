@@ -1,3 +1,6 @@
-{% block content %}
-<h1> you have logged out</h1>
-{% endblock %}
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
+<body>
+<hr size=90>
+<h1> You have logged out. </h1>
+<p><a href = "{% url 'login' %}" style="color:red;"> Log back in? </a></p>

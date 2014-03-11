@@ -2,8 +2,10 @@
 <link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
 <body>
 <hr size=90>
+<p style="text-align:right;"><a href="{% url 'home' %}" style = "color:red;">Back to Homepage</a></p>
 <h1> @{{my_user.username}}'s Profile </h1>
-<p>following {{ following }} </p>
+<h2>Following</h2>
+<p> {{ following }} </p>
 <h2> Followers </h2>
 {% if followers %}
 	<ul>
@@ -14,4 +16,15 @@
 {% else %}
 	<p>No followers are available.</p>
 {% endif %}
+<h2>@{{my_user.username}}'s Tweets<h2>
+{% if my_tweets %}
+	<ul>
+	{% for tweet in my_tweets %}
+		<li style="font-size:18">{{ tweet.content }}</li>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>No tweets are available.</p>
+{% endif %}
+
 

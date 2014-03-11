@@ -3,7 +3,8 @@
 <link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
 <body>
 <hr size=90>
-<h1 style="text-align:center;font-size:40;color:auto;"><strong> Welcome @{{ username }}! </strong> </h1>
+<h1 style="text-align:center;font-size:40;color:auto;"><strong> Welcome <a style = "color:red;" href="{% url 'my_profile' %}"> @{{ username }}! </a></strong> </h1>
+<p style="font-size:10px;text-align:right" height = 12px><a href ="{% url 'logout' %}">Logout</a><p>
 <hr color="blue" height="1px">
 <p  style="text-align:right;font-size:20" ><a style = "color:blue" href="{% url 'get_tweet' %}">Compose new Tweet</a></p>
 

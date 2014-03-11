@@ -23,6 +23,8 @@ urlpatterns = patterns('',
     url(r'^(?P<pk>\d+)/favorite/$', views.favorite, name='favorite'),
     url(r'^(?P<pk>\d+)/profile/$', views.profile, name='profile'),
     url(r'^(?P<pk>\d+)/follow/n.*$', views.follow, name='follow'),
+    url(r'^my_profile/$', views.my_profile, name='my_profile'),
+
 
 
 
