@@ -7,7 +7,9 @@ from django.shortcuts import render_to_response
 from django.contrib.auth.forms import UserCreationForm
 from twitterclone.models import Tweet
 from django.template import RequestContext, loader
+from django.contrib.auth.models import User, Permission
 import datetime
+from twitterclone.models import UserPro, OtherProfile
 
 """def index(request):
 	template = loader.get_template('twitterclone/index.html')
@@ -28,9 +30,19 @@ def auth_view(request):
 	username = request.POST.get('username', '')
 	password = request.POST.get('password', '')
 	user = auth.authenticate(username=username,password=password)
-
 	if user is not None:
 		auth.login(request,user)
+		user.save()
+		has_profile=-5
+		try:
+			has_profile = UserPro.objects.get(username=username)
+		except:	
+			error=1
+		if has_profile == -5:
+			new_user_pro = UserPro(username=username)
+			new_user_pro.save()
+			new_other_profile = OtherProfile(username=username)
+			new_other_profile.save()
 		return HttpResponseRedirect('/home')
 	else:
 		return HttpResponseRedirect('/invalid')
@@ -82,3 +94,38 @@ def home(request):
 		return HttpResponse(template.render(context))
 	else:
 		return HttpResponseRedirect('/login')
+
+def favorite(request,pk):
+	my_tweet = Tweet.objects.get(pk=pk)
+	my_tweet.favorites = my_tweet.favorites+1
+	my_tweet.save()
+	return HttpResponseRedirect('/home')
+
+def profile(request,pk):
+
+	my_user=User.objects.get(pk=pk)
+	my_user_pro =UserPro.objects.get(username=my_user.username)
+	my_other_pro=OtherProfile.objects.get(username=my_user.username)
+	template = loader.get_template('twitterclone/profile.html')
+	context = RequestContext(request, {'my_user':my_user,'following':my_user_pro.following,
+		'followers':my_other_pro.userpro_set.all()})
+	return HttpResponse(template.render(context))
+	#except:
+	#	template = loader.get_template('twitterclone/profile.html')
+	#	context = RequestContext(request, {'my_user':my_user,})
+
+		
+	
+def follow(request,pk):
+	their_username = User.objects.get(pk=pk).username
+	my_username = request.user.username
+	me = UserPro.objects.get(username=my_username)
+	himher = OtherProfile.objects.get(username=their_username)
+	me.following = himher
+
+	#my_name = me.following.username
+	me.save()
+	#me.following.add(himher)
+	return HttpResponseRedirect('/home')
+	#except:
+		#return HttpResponseRedirect('/invalid')

@@ -1,0 +1,17 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
+<body>
+<hr size=90>
+<h1> @{{my_user.username}}'s Profile </h1>
+<p>following {{ following }} </p>
+<h2> Followers </h2>
+{% if followers %}
+	<ul>
+	{% for follower in followers %}
+		<li>{{ follower.username }}</li>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>No followers are available.</p>
+{% endif %}
+

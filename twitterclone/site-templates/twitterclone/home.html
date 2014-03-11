@@ -11,9 +11,11 @@
 {% if latest_tweet_list %}
 	{% for tweet in latest_tweet_list %}
 		<div style="border:1px solid red;">
-		<strong><p style="margin-left:10px;float:left;font-size:16;color:blue">@{{ tweet.tweeter }}</p><p style="margin-right:30px;float:right;font-size:16;color:blue">Favorites: {{ tweet.favorites }}</strong></p>
+		<strong><p style="margin-left:10px;float:left;font-size:16;color:blue">@{{ tweet.tweeter }}</p><p style="margin-right:30px;float:right;font-size:16;color:blue"><a href = "{% url 'favorite' tweet.pk %}">Favorite Tweet</a>({{ tweet.favorites }} favorites)</strong></p>
 		<br>
 		<h1 style="margin-left:40px;font-size:20">{{ tweet.content }}</h1>
+		
+		<p><a href="{% url 'follow' 3 %}"> follow this user </a></p>
 		</div>
 		<br><br>
 

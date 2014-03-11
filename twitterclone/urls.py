@@ -20,6 +20,9 @@ urlpatterns = patterns('',
     url(r'^get_tweet/$', views.get_tweet, name='get_tweet'),
     url(r'^home/$', views.home, name='home'),
     url(r'^$', views.login, name='login'),
+    url(r'^(?P<pk>\d+)/favorite/$', views.favorite, name='favorite'),
+    url(r'^(?P<pk>\d+)/profile/$', views.profile, name='profile'),
+    url(r'^(?P<pk>\d+)/follow/n.*$', views.follow, name='follow'),
 
 
 
