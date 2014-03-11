@@ -1,0 +1,25 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
+<body>
+<hr size=90>
+<p style="text-align:right;"><a href="{% url 'home' %}" style = "color:red;">Back to Homepage</a></p>
+<h1> All Users You Currently Follow (Click for Profile) </h1>
+{% if second_list %}
+	<ul>
+	{% for user in second_list %}
+		<p><a style = "color:red;" href="{% url 'profile' user.pk %}"> {{user.username}} </a></p>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>No users are available.</p>
+{% endif %}
+<h1> All Users You Can Follow (Click to Follow)</h1>
+{% if user_list %}
+	<ul>
+	{% for user in user_list %}
+		<p><a style = "color:red;" href="{% url 'follow' user.pk %}"> {{user.username}} </a></p>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>No users are available.</p>
+{% endif %}

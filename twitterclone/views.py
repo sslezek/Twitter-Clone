@@ -20,6 +20,12 @@ from twitterclone.models import UserPro, OtherProfile
 	return HttpResponse(template.render(context))"""
 
 def login(request):
+	if not UserPro.objects.all():
+		new_user_pro = UserPro(username="admin")
+		new_user_pro.save()
+		new_other_profile = OtherProfile(username="admin")
+		new_other_profile.save()
+
 	c = {}
 	c.update(csrf(request))
 	return render_to_response('twitterclone/login.html',c)
@@ -88,7 +94,11 @@ def make_tweet(request):
 
 def home(request):
 	if request.user.is_authenticated():
-		latest_tweet_list = Tweet.objects.order_by('-pub_date')[:5]
+		my_user=request.user
+		my_user_pro=UserPro.objects.get(username=my_user.username)
+		my_following_list = my_user_pro.get_following()
+		all_tweets = Tweet.objects.filter(tweeter__in=my_following_list)
+		latest_tweet_list = all_tweets.order_by('-pub_date')[:5]
 		template = loader.get_template('twitterclone/home.html')
 		context = RequestContext(request, {'latest_tweet_list': latest_tweet_list,'username':request.user.username,})
 		return HttpResponse(template.render(context))
@@ -101,6 +111,17 @@ def favorite(request,pk):
 	my_tweet.save()
 	return HttpResponseRedirect('/home')
 
+def all_users(request):
+	user_list = UserPro.objects.all()
+	my_user=request.user
+	my_user_pro=my_user_pro =UserPro.objects.get(username=my_user.username)
+	my_following_list = my_user_pro.get_following()
+	not_following = user_list.exclude(username__in=my_following_list)
+	following_list = user_list.filter(username__in=my_following_list)
+	template=loader.get_template('twitterclone/all_users.html')
+	context = RequestContext(request, {'user_list':not_following,'second_list':following_list})
+	return HttpResponse(template.render(context))
+
 def profile(request,pk):
 
 	my_user=User.objects.get(pk=pk)
@@ -108,7 +129,7 @@ def profile(request,pk):
 	my_other_pro=OtherProfile.objects.get(username=my_user.username)
 	template = loader.get_template('twitterclone/profile.html')
 	my_tweets = Tweet.objects.filter(tweeter=my_user)
-	context = RequestContext(request, {'my_user':my_user,'following':my_user_pro.following,
+	context = RequestContext(request, {'my_user':my_user,'following':my_user_pro.following.all(),
 		'followers':my_other_pro.userpro_set.all(),'my_tweets':my_tweets})
 	return HttpResponse(template.render(context))
 	#except:
@@ -121,7 +142,7 @@ def my_profile(request):
 	my_other_pro=OtherProfile.objects.get(username=my_user.username)
 	template = loader.get_template('twitterclone/profile.html')
 	my_tweets = Tweet.objects.filter(tweeter=my_user)
-	context = RequestContext(request, {'my_user':my_user,'following':my_user_pro.following,
+	context = RequestContext(request, {'my_user':my_user,'following':my_user_pro.following.all(),
 		'followers':my_other_pro.userpro_set.all(),'my_tweets':my_tweets})
 	return HttpResponse(template.render(context))
 
@@ -131,7 +152,7 @@ def follow(request,pk):
 	my_username = request.user.username
 	me = UserPro.objects.get(username=my_username)
 	himher = OtherProfile.objects.get(username=their_username)
-	me.following = himher
+	me.following.add(himher)
 
 	#my_name = me.following.username
 	me.save()

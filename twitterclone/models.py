@@ -22,9 +22,15 @@ class OtherProfile(models.Model):
 
 class UserPro(models.Model):
 	username = models.CharField(max_length=30)
-	following = models.ForeignKey(OtherProfile,'username',blank=True,null=True)
+	following = models.ManyToManyField(OtherProfile,'username',blank=True,null=True)
 	def __unicode__(self):
 		return self.username
+	def get_following(self):
+		list = []
+		for use in self.following.all():
+			list.append(use.username)
+		return list
+
 
 
 #class FavoriteClass(models.Model)
