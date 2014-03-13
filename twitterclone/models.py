@@ -11,8 +11,10 @@ class Tweet(models.Model):
 		return self.content
 	favorites=models.IntegerField(default=0)
 	tweeter = models.CharField(max_length=20)
+	favoriteclass_set=[]
 	def favorite(self):
 		self.favorites = self.favorites+1;
+	numfaves=len(favoriteclass_set)
 
 class OtherProfile(models.Model):
 	username = models.CharField(max_length=30,unique=True)
@@ -32,7 +34,6 @@ class UserPro(models.Model):
 		return list
 
 
-
-#class FavoriteClass(models.Model)
-#	favedtweet = models.OneToOneField(Tweet, primary_key=True)
-#	faving_user = models.ForeignKey(UserPro)
+class FavoriteClass(models.Model):
+	faved_tweet = models.ForeignKey(Tweet, blank=True,null=True)
+	faving_user = models.ForeignKey(UserPro, blank=True,null=True)

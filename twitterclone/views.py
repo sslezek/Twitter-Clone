@@ -5,11 +5,11 @@ from django.contrib import auth
 from django.core.context_processors import csrf
 from django.shortcuts import render_to_response
 from django.contrib.auth.forms import UserCreationForm
-from twitterclone.models import Tweet
 from django.template import RequestContext, loader
 from django.contrib.auth.models import User, Permission
 import datetime
-from twitterclone.models import UserPro, OtherProfile
+from twitterclone.models import UserPro, OtherProfile, FavoriteClass,Tweet
+from django.contrib import messages
 
 """def index(request):
 	template = loader.get_template('twitterclone/index.html')
@@ -30,7 +30,13 @@ def login(request):
 	c.update(csrf(request))
 	return render_to_response('twitterclone/login.html',c)
 
+def get_favorites(request,pk):
 
+	my_tweet=Tweet.objects.get(pk=pk)
+	faves=my_tweet.favoriteclass_set.all()
+	template = loader.get_template('twitterclone/get_favorites.html')
+	context = RequestContext(request, {'faves':faves})
+	return HttpResponse(template.render(context))
 
 def auth_view(request):
 	username = request.POST.get('username', '')
@@ -106,8 +112,23 @@ def home(request):
 		return HttpResponseRedirect('/login')
 
 def favorite(request,pk):
+	my_user=request.user
+	my_user_pro=UserPro.objects.get(username=my_user.username)
 	my_tweet = Tweet.objects.get(pk=pk)
 	my_tweet.favorites = my_tweet.favorites+1
+	the_fave = FavoriteClass()
+	the_fave.save()
+	repeat = False
+	for favelol in my_tweet.favoriteclass_set.all():
+		that_user = favelol.faving_user
+		if that_user == my_user_pro:
+		    repeat = True
+		    return HttpResponseRedirect('/already_faved')
+
+	if not repeat:
+		my_tweet.favoriteclass_set.add(the_fave)
+		my_user_pro.favoriteclass_set.add(the_fave)
+	the_fave.save()
 	my_tweet.save()
 	return HttpResponseRedirect('/home')
 
@@ -160,3 +181,20 @@ def follow(request,pk):
 	return HttpResponseRedirect('/home')
 	#except:
 		#return HttpResponseRedirect('/invalid')
+
+def already_faved(request):
+	template = loader.get_template('twitterclone/already_faved.html')
+	context = RequestContext(request, {})
+	return HttpResponse(template.render(context))
+"""
+f=FavoriteClass()
+f.save()
+my_tweet=Tweet(content="hi",tweeter="sam")
+my_tweet.save()
+my_user = UserPro(username="sdotslezek")
+my_user.save()
+f.faving_user=my_user
+f.faved_tweet=my_tweet
+f.save()
+my_set = my_tweet.favoriteclass_set.all()
+"""

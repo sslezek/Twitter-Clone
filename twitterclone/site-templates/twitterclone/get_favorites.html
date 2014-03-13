@@ -1,0 +1,13 @@
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
+<script type='text/javascript' src='twitterclone/script.js'></script>
+<hr size=90>
+<div class="mousehide" style="border:1px solid red;"><h1> Users That Have Favorited This Tweet </h1>
+<ul>
+{% for fave in faves %}
+<div class="mousehide" ><li> {{ fave.faving_user }} </li></div>
+{% endfor %}
+</ul></div>
+{% if not faves %}
+<p> This tweet has no favorites </p>
+{% endif %}

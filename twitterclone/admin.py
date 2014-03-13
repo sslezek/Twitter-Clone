@@ -5,6 +5,7 @@ class TweetAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,               {'fields': ['content']}),
         ('Date information', {'fields': ['pub_date']}),
+        ('Favorites',{'fields':['favoriteclass_set']})
     ]
 
 admin.site.register(Tweet, TweetAdmin)

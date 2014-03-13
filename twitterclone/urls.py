@@ -25,7 +25,8 @@ urlpatterns = patterns('',
     url(r'^(?P<pk>\d+)/follow/n.*$', views.follow, name='follow'),
     url(r'^my_profile/$', views.my_profile, name='my_profile'),
     url(r'^all_users/$', views.all_users, name='all_users'),
-
+    url(r'^(?P<pk>\d+)/get_favorites/n.*$', views.get_favorites, name='get_favorites'),
+    url(r'^already_faved/$', views.already_faved, name='already_faved'),
 
 
 
