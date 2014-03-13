@@ -49,6 +49,14 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'twitterclone', ['FavoriteClass'])
 
+        # Adding model 'Retweet'
+        db.create_table(u'twitterclone_retweet', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('r_tweet', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['twitterclone.Tweet'], null=True, blank=True)),
+            ('r_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['twitterclone.UserPro'], null=True, blank=True)),
+        ))
+        db.send_create_signal(u'twitterclone', ['Retweet'])
+
 
     def backwards(self, orm):
         # Deleting model 'Tweet'
@@ -66,6 +74,9 @@ class Migration(SchemaMigration):
         # Deleting model 'FavoriteClass'
         db.delete_table(u'twitterclone_favoriteclass')
 
+        # Deleting model 'Retweet'
+        db.delete_table(u'twitterclone_retweet')
+
 
     models = {
         u'twitterclone.favoriteclass': {
@@ -78,6 +89,12 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'OtherProfile'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
+        },
+        u'twitterclone.retweet': {
+            'Meta': {'object_name': 'Retweet'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'r_tweet': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['twitterclone.Tweet']", 'null': 'True', 'blank': 'True'}),
+            'r_user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['twitterclone.UserPro']", 'null': 'True', 'blank': 'True'})
         },
         u'twitterclone.tweet': {
             'Meta': {'object_name': 'Tweet'},

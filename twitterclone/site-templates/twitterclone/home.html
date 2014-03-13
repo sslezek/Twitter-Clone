@@ -1,27 +1,31 @@
 <!--{% load static from staticfiles %}-->
-
+<head>
 <link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="{% static 'twitterclone/scriptwo.js' %}"></script>
+</head>
 <body>
 <hr size=90>
 <h1 style="text-align:center;font-size:40;color:auto;"><strong> Welcome <a style = "color:red;" href="{% url 'my_profile' %}"> @{{ username }}! </a></strong> </h1>
+<h1> NOTE: Usernames on many of these pages are not yet linked to profiles. I will be fixing this on 3/13. For now, if you click them, they will give an error message through jQuery. Retweets are not shown yet on main page, but ARE correctly shown in user profiles. You can access your own profile by clicking your username after "Welcome" above, and you can access other profiles under "Follow more users" (only possible for  users that you follow) </h1>
 <p style="font-size:10px;text-align:right" height = 12px><a href ="{% url 'logout' %}">Logout</a><p>
 <hr color="blue" height="1px">
-<p  style="text-align:right;font-size:20" ><a style = "color:blue" href="{% url 'get_tweet' %}">Compose new Tweet</a></p>
+<p  style="text-align:right;font-size:20" ><a href="{% url 'get_tweet' %}">Compose new Tweet</a></p>
 
 <h2><strong>Latest Tweets From Users You are Following <a style = "color:red;" href = "{% url 'all_users' %}"> (Follow more users) </a></strong></h2>
 {% if latest_tweet_list %}
 	{% for tweet in latest_tweet_list %}
 		<div style="border:1px solid red;">
-		<strong><p style="margin-left:10px;float:left;font-size:16;color:blue">@{{ tweet.tweeter }}</p>
+		<strong><p id="error" style="margin-left:10px;float:left;font-size:16;color:blue">@{{ tweet.tweeter }}</p>
 		<p style="margin-right:30px;float:right;font-size:16;color:blue"><a style = "color:red;" href = "{% url 'favorite' tweet.pk %}">Favorite Tweet</a>({{ tweet.favorites }} favorites)</strong></p><br>
 		<p><a style = "margin-right:-100px;float:right;color:red;font-size:12" href = "{% url 'get_favorites' tweet.pk %}"> Who favorited this? </a></p>
 		<h1 style="margin-left:40px;font-size:20">{{ tweet.content }}</h1>
 		<p style = "float:left; font-size:12;"> {{ tweet.pub_date }}</p>
 		<br><br>
+		<p><a href = "{% url 'retweet' tweet.pk %}"> Retweet </a></p>
+		<p><a href = "{% url 'retweets' tweet.pk %}"> Who retweeted this? </a> </p>
 		</div>
 		<br>
-
-
 	{% endfor %}
 	</ul>
 {% else %}

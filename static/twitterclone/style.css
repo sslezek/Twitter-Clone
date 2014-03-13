@@ -2,3 +2,7 @@ body{
 	background: white url("images/bg2.gif") no-repeat right top;
 	/*margin-top: 150px*/
 }
+
+a{
+	color:red;
+}

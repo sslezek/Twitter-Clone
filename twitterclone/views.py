@@ -8,7 +8,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.template import RequestContext, loader
 from django.contrib.auth.models import User, Permission
 import datetime
-from twitterclone.models import UserPro, OtherProfile, FavoriteClass,Tweet
+from twitterclone.models import UserPro, OtherProfile, FavoriteClass,Tweet,Retweet
 from django.contrib import messages
 
 """def index(request):
@@ -29,6 +29,33 @@ def login(request):
 	c = {}
 	c.update(csrf(request))
 	return render_to_response('twitterclone/login.html',c)
+
+def retweet(request,pk):
+	my_tweet=Tweet.objects.get(pk=pk)
+	my_user=request.user
+	my_user_pro=my_user_pro =UserPro.objects.get(username=my_user.username)
+	repeat = False
+	for rtlol in my_tweet.retweet_set.all():
+		that_user = rtlol.r_user
+		if that_user == my_user_pro:
+		    repeat = True
+		    return HttpResponseRedirect('/already_faved')
+	if not repeat:
+		newrt = Retweet(r_tweet=my_tweet,r_user=my_user_pro)
+		newrt.save()
+	else: HttpResponseRedirect('/already_faved')
+	return HttpResponseRedirect('/home')
+
+def retweets(request,pk):
+	my_user=request.user
+	my_user_pro=UserPro.objects.get(username=my_user.username)
+	my_tweet=Tweet.objects.get(pk=pk)
+	rts=my_tweet.retweet_set.all()
+	template = loader.get_template('twitterclone/retweets.html')
+	context = RequestContext(request, {'rts':rts})
+	return HttpResponse(template.render(context))
+	
+
 
 def get_favorites(request,pk):
 
@@ -115,7 +142,6 @@ def favorite(request,pk):
 	my_user=request.user
 	my_user_pro=UserPro.objects.get(username=my_user.username)
 	my_tweet = Tweet.objects.get(pk=pk)
-	my_tweet.favorites = my_tweet.favorites+1
 	the_fave = FavoriteClass()
 	the_fave.save()
 	repeat = False
@@ -128,6 +154,7 @@ def favorite(request,pk):
 	if not repeat:
 		my_tweet.favoriteclass_set.add(the_fave)
 		my_user_pro.favoriteclass_set.add(the_fave)
+		my_tweet.favorites = my_tweet.favorites+1
 	the_fave.save()
 	my_tweet.save()
 	return HttpResponseRedirect('/home')
@@ -150,8 +177,13 @@ def profile(request,pk):
 	my_other_pro=OtherProfile.objects.get(username=my_user.username)
 	template = loader.get_template('twitterclone/profile.html')
 	my_tweets = Tweet.objects.filter(tweeter=my_user)
+	my_rts = set()
+	for tweet in Tweet.objects.all():
+		for retweetlol in tweet.retweet_set.all():
+			if retweetlol.r_user == my_user_pro:
+				my_rts.add(tweet)
 	context = RequestContext(request, {'my_user':my_user,'following':my_user_pro.following.all(),
-		'followers':my_other_pro.userpro_set.all(),'my_tweets':my_tweets})
+		'followers':my_other_pro.userpro_set.all(),'my_tweets':my_tweets,'my_rts':my_rts})
 	return HttpResponse(template.render(context))
 	#except:
 	#	template = loader.get_template('twitterclone/profile.html')
@@ -163,8 +195,13 @@ def my_profile(request):
 	my_other_pro=OtherProfile.objects.get(username=my_user.username)
 	template = loader.get_template('twitterclone/profile.html')
 	my_tweets = Tweet.objects.filter(tweeter=my_user)
+	my_rts = set()
+	for tweet in Tweet.objects.all():
+		for retweetlol in tweet.retweet_set.all():
+			if retweetlol.r_user == my_user_pro:
+				my_rts.add(tweet)
 	context = RequestContext(request, {'my_user':my_user,'following':my_user_pro.following.all(),
-		'followers':my_other_pro.userpro_set.all(),'my_tweets':my_tweets})
+		'followers':my_other_pro.userpro_set.all(),'my_tweets':my_tweets,'my_rts':my_rts})
 	return HttpResponse(template.render(context))
 
 	
@@ -184,6 +221,11 @@ def follow(request,pk):
 
 def already_faved(request):
 	template = loader.get_template('twitterclone/already_faved.html')
+	context = RequestContext(request, {})
+	return HttpResponse(template.render(context))
+
+def already_rtd(request):
+	template = loader.get_template('twitterclone/already_rtd.html')
 	context = RequestContext(request, {})
 	return HttpResponse(template.render(context))
 """

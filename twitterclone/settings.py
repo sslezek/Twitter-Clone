@@ -28,7 +28,9 @@ TEMPLATE_DEBUG = True
 TEMPLATE_DIRS = {
     os.path.join(DIRNAME, 'site-templates/'),
 }
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+    )
 
 
 ALLOWED_HOSTS = []
@@ -43,6 +45,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'jquery',
     'twitterclone',
     'south'
 )

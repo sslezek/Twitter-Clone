@@ -27,6 +27,9 @@ urlpatterns = patterns('',
     url(r'^all_users/$', views.all_users, name='all_users'),
     url(r'^(?P<pk>\d+)/get_favorites/n.*$', views.get_favorites, name='get_favorites'),
     url(r'^already_faved/$', views.already_faved, name='already_faved'),
+    url(r'^(?P<pk>\d+)/retweets/$', views.retweets, name='retweets'),
+    url(r'^(?P<pk>\d+)/retweet/$', views.retweet, name='retweet'),
+    url(r'^already_rtd/$', views.already_rtd, name='already_rtd'),
 
 
 

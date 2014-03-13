@@ -1,5 +1,9 @@
 {% load staticfiles %}
-<link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
+<head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="{% static 'twitterclone/scriptwo.js' %}"></script>
+	<link rel="stylesheet" type="text/css" href="{% static 'twitterclone/style.css' %}" />
+</head>
 <body>
 <hr size=90>
 <p style="text-align:right;"><a href="{% url 'home' %}" style = "color:red;">Back to Homepage</a></p>
@@ -7,15 +11,15 @@
 <h2>Following</h2>
 {% if following %}
 {% for followed_by in following %}
-<p> {{ followed_by.username }} </p>
+<p id="error"> {{ followed_by.username }} </p>
 {% endfor %}
 {% else %}
-<p> Not following anyone </p>
+<p > Not following anyone </p>
 {% endif %}
 <h2> Followers </h2>
 {% if followers %}
 	{% for follower in followers %}
-		<p>{{ follower.username }}</p>
+		<p id="error">{{ follower.username }}</p>
 	{% endfor %}
 {% else %}
 	<p>No followers are available.</p>
@@ -24,7 +28,7 @@
 {% if my_tweets %}
 	{% for tweet in my_tweets %}
 		<div style="border:1px solid red;">
-		<strong><p style="margin-left:10px;float:left;font-size:16;color:blue">@{{ tweet.tweeter }}</p>
+		<strong><p id="error" style="margin-left:10px;float:left;font-size:16;color:blue">@{{ tweet.tweeter }}</p>
 		<p style="margin-right:30px;float:right;font-size:16;color:blue"><a style = "color:red;" href = "{% url 'favorite' tweet.pk %}">Favorite Tweet</a>({{ tweet.favorites }} favorites)</strong></p>
 		<hr size=4 style="border:none;">
 		<p><a style = "margin-right:-105px;float:right;color:red;font-size:12" href = "{% url 'get_favorites' tweet.pk %}"> Who favorited this? </a></p>
@@ -40,5 +44,26 @@
 {% else %}
 	<p>No tweets are available.</p>
 {% endif %}
+
+<h2>@{{my_user.username}}'s Retweets</h2>
+{% if my_rts %}
+	{% for rt in my_rts %}
+		<div style="border:1px solid red;">
+		<strong><p id="error" style="margin-left:10px;float:left;font-size:16;color:blue">@{{ rt.tweeter }}</p>
+		<p style="margin-right:30px;float:right;font-size:16;color:blue"><a style = "color:red;" href = "{% url 'favorite' rt.pk %}">Favorite Tweet</a>({{ rt.favorites }} favorites)</strong></p>
+		<hr size=4 style="border:none;">
+		<p><a style = "margin-right:-105px;float:right;color:red;font-size:12" href = "{% url 'get_favorites' rt.pk %}"> Who favorited this? </a></p>
+		<h1 style="margin-left:40px;font-size:20">{{ rt.content }}</h1>
+		<p style = "float:left; font-size:12;"> {{ rt.pub_date }}</p>
+		<br><br>
+		</div>
+		<br>
+	{% endfor %}
+	</ul>
+{% else %}
+	<p>No retweets are available.</p>
+{% endif %}
+
+
 
 
