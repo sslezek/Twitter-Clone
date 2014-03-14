@@ -119,9 +119,10 @@ def get_tweet(request):
 	
 def make_tweet(request):
 	content = request.POST.get('content', '')
-	tweeter = request.user
+	my_user=request.user
+	my_user_pro=UserPro.objects.get(username=my_user.username)
 	dateandtime = datetime.datetime.now()
-	t = Tweet(content=content,tweeter=tweeter,pub_date=dateandtime)
+	t = Tweet(content=content,tweeter=my_user_pro,pub_date=dateandtime)
 	t.save()
 	return HttpResponseRedirect('/home')
 
@@ -130,7 +131,11 @@ def home(request):
 		my_user=request.user
 		my_user_pro=UserPro.objects.get(username=my_user.username)
 		my_following_list = my_user_pro.get_following()
-		all_tweets = Tweet.objects.filter(tweeter__in=my_following_list)
+		folo_list_two = set()
+		for foloing in my_following_list:
+			new_folo = UserPro.objects.get(username=foloing)
+			folo_list_two.add(new_folo)
+		all_tweets = Tweet.objects.filter(tweeter__in=folo_list_two)
 		latest_tweet_list = all_tweets.order_by('-pub_date')[:5]
 		template = loader.get_template('twitterclone/home.html')
 		context = RequestContext(request, {'latest_tweet_list': latest_tweet_list,'username':request.user.username,})
@@ -176,7 +181,7 @@ def profile(request,pk):
 	my_user_pro =UserPro.objects.get(username=my_user.username)
 	my_other_pro=OtherProfile.objects.get(username=my_user.username)
 	template = loader.get_template('twitterclone/profile.html')
-	my_tweets = Tweet.objects.filter(tweeter=my_user)
+	my_tweets = Tweet.objects.filter(tweeter=my_user_pro)
 	my_rts = set()
 	for tweet in Tweet.objects.all():
 		for retweetlol in tweet.retweet_set.all():
@@ -194,7 +199,7 @@ def my_profile(request):
 	my_user_pro =UserPro.objects.get(username=my_user.username)
 	my_other_pro=OtherProfile.objects.get(username=my_user.username)
 	template = loader.get_template('twitterclone/profile.html')
-	my_tweets = Tweet.objects.filter(tweeter=my_user)
+	my_tweets = Tweet.objects.filter(tweeter=my_user_pro)
 	my_rts = set()
 	for tweet in Tweet.objects.all():
 		for retweetlol in tweet.retweet_set.all():

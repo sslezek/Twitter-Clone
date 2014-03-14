@@ -12,6 +12,12 @@ $(document).ready(function() {
    $('a').mouseenter(function() {
       $(this).css('color','blue');
    });
+   $('div').mouseenter(function() {
+       $(this).css('border','1px solid blue');
+   });
+   $('div').mouseleave(function() {
+       $(this).css('border','1px solid red');
+   });
    $('a').mouseleave(function() {
       $(this).css('color','red');
    });

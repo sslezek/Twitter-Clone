@@ -4,19 +4,6 @@ import datetime
 from django.contrib.auth.models import User
 
 
-class Tweet(models.Model):
-	content = models.CharField(max_length=140)
-	pub_date = models.DateTimeField('date published')
-	def __unicode__(self):
-		return self.content
-	favorites=models.IntegerField(default=0)
-	tweeter = models.CharField(max_length=20)
-	favoriteclass_set=[]
-	def favorite(self):
-		self.favorites = self.favorites+1;
-	numfaves=len(favoriteclass_set)
-	#rt = models.BooleanField(default=False)
-
 class OtherProfile(models.Model):
 	username = models.CharField(max_length=30,unique=True)
 	def __unicode__(self):
@@ -33,6 +20,20 @@ class UserPro(models.Model):
 		for use in self.following.all():
 			list.append(use.username)
 		return list
+
+
+class Tweet(models.Model):
+	content = models.CharField(max_length=140)
+	pub_date = models.DateTimeField('date published')
+	def __unicode__(self):
+		return self.content
+	favorites=models.IntegerField(default=0)
+	tweeter = models.ForeignKey(UserPro)
+	favoriteclass_set=[]
+	def favorite(self):
+		self.favorites = self.favorites+1;
+	numfaves=len(favoriteclass_set)
+	#rt = models.BooleanField(default=False)
 
 
 class FavoriteClass(models.Model):

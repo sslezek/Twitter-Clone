@@ -21,9 +21,8 @@
 		<p><a style = "margin-right:-100px;float:right;color:red;font-size:12" href = "{% url 'get_favorites' tweet.pk %}"> Who favorited this? </a></p>
 		<h1 style="margin-left:40px;font-size:20">{{ tweet.content }}</h1>
 		<p style = "float:left; font-size:12;"> {{ tweet.pub_date }}</p>
-		<br><br>
-		<p><a href = "{% url 'retweet' tweet.pk %}"> Retweet </a></p>
-		<p><a href = "{% url 'retweets' tweet.pk %}"> Who retweeted this? </a> </p>
+		<strong><p style="text-align:right;margin-right:140px;"><a style = "font-size:16;" href = "{% url 'retweet' tweet.pk %}"> Retweet </a></p></strong>
+		<p style = "text-align:right;margin-right:110px;margin-top:-12px;font-size:12"><a href = "{% url 'retweets' tweet.pk %}"> Who retweeted this? </a> </p>
 		</div>
 		<br>
 	{% endfor %}
