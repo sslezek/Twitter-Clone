@@ -28,6 +28,7 @@ class Tweet(models.Model):
 	def __unicode__(self):
 		return self.content
 	favorites=models.IntegerField(default=0)
+	retweets=models.IntegerField(default=0)
 	tweeter = models.ForeignKey(UserPro)
 	favoriteclass_set=[]
 	def favorite(self):

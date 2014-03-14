@@ -6,12 +6,12 @@
         <script src="{% static 'twitterclone/scriptwo.js' %}"></script>
 </head>
 <hr size=90>
-<div style="border:1px solid red;"><h1> Users That Have Retweeted This Tweet </h1>
+<h1> Users That Have Retweeted This Tweet </h1>
 <ul>
 {% for rt in rts %}
-<div id="error"><li> {{ rt.r_user }} </li></div>
+<a href="{% url 'profile' rt.pk %}"> {{ rt.username }} </a></div>
 {% endfor %}
-</ul></div>
+</ul>
 {% if not rts %}
 <p> This tweet has no retweets </p>s
 {% endif %}

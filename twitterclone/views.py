@@ -30,20 +30,25 @@ def login(request):
 	c.update(csrf(request))
 	return render_to_response('twitterclone/login.html',c)
 
+
 def retweet(request,pk):
 	my_tweet=Tweet.objects.get(pk=pk)
 	my_user=request.user
 	my_user_pro=my_user_pro =UserPro.objects.get(username=my_user.username)
 	repeat = False
+	if my_tweet.tweeter == my_user_pro:
+		return HttpResponseRedirect('/rtself')
 	for rtlol in my_tweet.retweet_set.all():
 		that_user = rtlol.r_user
 		if that_user == my_user_pro:
 		    repeat = True
-		    return HttpResponseRedirect('/already_faved')
+		    return HttpResponseRedirect('/already_rtd')
 	if not repeat:
 		newrt = Retweet(r_tweet=my_tweet,r_user=my_user_pro)
+		my_tweet.retweets = my_tweet.retweets + 1
+		my_tweet.save()
 		newrt.save()
-	else: HttpResponseRedirect('/already_faved')
+	else: HttpResponseRedirect('/already_rtd')
 	return HttpResponseRedirect('/home')
 
 def retweets(request,pk):
@@ -51,18 +56,31 @@ def retweets(request,pk):
 	my_user_pro=UserPro.objects.get(username=my_user.username)
 	my_tweet=Tweet.objects.get(pk=pk)
 	rts=my_tweet.retweet_set.all()
+	my_set= set()
+	for rt in rts:
+		user_lol = UserPro.objects.get(username=rt.r_user)
+		my_set.add(user_lol)
+
 	template = loader.get_template('twitterclone/retweets.html')
-	context = RequestContext(request, {'rts':rts})
+	context = RequestContext(request, {'rts':my_set})
 	return HttpResponse(template.render(context))
-	
+
+def rtself(request):
+	template = loader.get_template('twitterclone/rtself.html')
+	context = RequestContext(request, {})
+	return HttpResponse(template.render(context))
 
 
 def get_favorites(request,pk):
 
 	my_tweet=Tweet.objects.get(pk=pk)
 	faves=my_tweet.favoriteclass_set.all()
+	my_faves = set()
+	for fave in faves:
+		user_lol=UserPro.objects.get(username=fave.faving_user)
+		my_faves.add(user_lol)
 	template = loader.get_template('twitterclone/get_favorites.html')
-	context = RequestContext(request, {'faves':faves})
+	context = RequestContext(request, {'faves':my_faves})
 	return HttpResponse(template.render(context))
 
 def auth_view(request):
@@ -136,6 +154,14 @@ def home(request):
 			new_folo = UserPro.objects.get(username=foloing)
 			folo_list_two.add(new_folo)
 		all_tweets = Tweet.objects.filter(tweeter__in=folo_list_two)
+		"""for tweet in Tweet.objects.all():
+			toRT = False
+			for a_tweet in all_tweets:
+				if a_tweet == tweet:
+					toRT = True
+			for follo in my_user_pro.following:
+				if not toRT:
+					for """
 		latest_tweet_list = all_tweets.order_by('-pub_date')[:5]
 		template = loader.get_template('twitterclone/home.html')
 		context = RequestContext(request, {'latest_tweet_list': latest_tweet_list,'username':request.user.username,})

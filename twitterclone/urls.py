@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     url(r'^(?P<pk>\d+)/retweets/$', views.retweets, name='retweets'),
     url(r'^(?P<pk>\d+)/retweet/$', views.retweet, name='retweet'),
     url(r'^already_rtd/$', views.already_rtd, name='already_rtd'),
+    url(r'^rtself/$', views.rtself, name='rtself'),
 
 
 

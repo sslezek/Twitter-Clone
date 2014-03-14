@@ -4,65 +4,13 @@
     <head>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
         <script src="{% static 'twitterclone/scriptwo.js' %}"></script>
-        <!--<script type="text/javascript">
-        $(document).ready(function() {
-   $('div').mouseenter(function() {
-       $(this).animate({
-           height: '+=10px'
-       });
-   });
-   $('div').mouseleave(function() {
-       $(this).animate({
-           height: '-=10px'
-       }); 
-   });
-   $('div').click(function() {
-       $(this).toggle(1000);
-   }); 
-});
-        </script>-->
 </head>
 <hr size=90>
-<div style="border:1px solid red;"><h1> Users That Have Favorited This Tweet </h1>
-<ul>
+<h1> Users That Have Favorited This Tweet </h1>
 {% for fave in faves %}
-<div id="error"><li> {{ fave.faving_user }} </li></div>
+<a href = "{% url 'profile' fave.pk %}"> {{ fave.username }} </a><br>
 {% endfor %}
-</ul></div>
+</ul>
 {% if not faves %}
-<p> This tweet has no favorites </p>
+<p> This tweet has no favorites </p>s
 {% endif %}
-<!--
-{% load staticfiles %}
-<!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" type="text/css" href="{% static 'twitterclone/styletwo.css' %}"/>
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-        <script type="text/javascript">
-        $(document).ready(function() {
-   $('div').mouseenter(function() {
-       $(this).animate({
-           height: '+=10px'
-       });
-   });
-   $('div').mouseleave(function() {
-       $(this).animate({
-           height: '-=10px'
-       }); 
-   });
-   $('div').click(function() {
-       $(this).toggle(1000);
-   }); 
-});
-        </script>
-
-    </head>
-    <body>
-        <div id="red"></div>
-        <div id="blue"></div>
-        <div id="yellow"></div>
-        <div id="green"></div>
-    </body>
-</html>
--->

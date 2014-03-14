@@ -12,7 +12,7 @@
 <h2>Following</h2>
 {% if following %}
 {% for followed_by in following %}
-<p id="error"> {{ followed_by.username }} </p>
+<p><a href={% url 'profile' followed_by.pk %}> @{{ followed_by.username }} </a></p>
 {% endfor %}
 {% else %}
 <p > Not following anyone </p>
@@ -20,7 +20,7 @@
 <h2> Followers </h2>
 {% if followers %}
 	{% for follower in followers %}
-		<p id="error">{{ follower.username }}</p>
+		<p><a href = {% url 'profile' follower.pk %}>@{{ follower.username }}</a></p>
 	{% endfor %}
 {% else %}
 	<p>No followers are available.</p>
