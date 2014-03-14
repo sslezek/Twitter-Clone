@@ -8,16 +8,6 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Tweet'
-        db.create_table(u'twitterclone_tweet', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('content', self.gf('django.db.models.fields.CharField')(max_length=140)),
-            ('pub_date', self.gf('django.db.models.fields.DateTimeField')()),
-            ('favorites', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('tweeter', self.gf('django.db.models.fields.CharField')(max_length=20)),
-        ))
-        db.send_create_signal(u'twitterclone', ['Tweet'])
-
         # Adding model 'OtherProfile'
         db.create_table(u'twitterclone_otherprofile', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -41,6 +31,19 @@ class Migration(SchemaMigration):
         ))
         db.create_unique(m2m_table_name, ['userpro_id', 'otherprofile_id'])
 
+        # Adding model 'Tweet'
+        db.create_table(u'twitterclone_tweet', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('content', self.gf('django.db.models.fields.CharField')(max_length=140)),
+            ('pub_date', self.gf('django.db.models.fields.DateTimeField')()),
+            ('favorites', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('retweets', self.gf('django.db.models.fields.IntegerField')(default=0)),
+            ('tweeter', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['twitterclone.UserPro'])),
+            ('retweeter', self.gf('django.db.models.fields.CharField')(max_length=30, null=True)),
+            ('is_rt', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        ))
+        db.send_create_signal(u'twitterclone', ['Tweet'])
+
         # Adding model 'FavoriteClass'
         db.create_table(u'twitterclone_favoriteclass', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
@@ -59,9 +62,6 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Deleting model 'Tweet'
-        db.delete_table(u'twitterclone_tweet')
-
         # Deleting model 'OtherProfile'
         db.delete_table(u'twitterclone_otherprofile')
 
@@ -70,6 +70,9 @@ class Migration(SchemaMigration):
 
         # Removing M2M table for field following on 'UserPro'
         db.delete_table(db.shorten_name(u'twitterclone_userpro_following'))
+
+        # Deleting model 'Tweet'
+        db.delete_table(u'twitterclone_tweet')
 
         # Deleting model 'FavoriteClass'
         db.delete_table(u'twitterclone_favoriteclass')
@@ -101,8 +104,11 @@ class Migration(SchemaMigration):
             'content': ('django.db.models.fields.CharField', [], {'max_length': '140'}),
             'favorites': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'is_rt': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'pub_date': ('django.db.models.fields.DateTimeField', [], {}),
-            'tweeter': ('django.db.models.fields.CharField', [], {'max_length': '20'})
+            'retweeter': ('django.db.models.fields.CharField', [], {'max_length': '30', 'null': 'True'}),
+            'retweets': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
+            'tweeter': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['twitterclone.UserPro']"})
         },
         u'twitterclone.userpro': {
             'Meta': {'object_name': 'UserPro'},

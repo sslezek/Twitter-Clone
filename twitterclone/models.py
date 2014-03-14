@@ -34,7 +34,8 @@ class Tweet(models.Model):
 	def favorite(self):
 		self.favorites = self.favorites+1;
 	numfaves=len(favoriteclass_set)
-	#rt = models.BooleanField(default=False)
+	retweeter = models.CharField(max_length=30,null=True)
+	is_rt = models.BooleanField(default=False)
 
 
 class FavoriteClass(models.Model):

@@ -153,18 +153,27 @@ def home(request):
 		for foloing in my_following_list:
 			new_folo = UserPro.objects.get(username=foloing)
 			folo_list_two.add(new_folo)
-		all_tweets = Tweet.objects.filter(tweeter__in=folo_list_two)
-		"""for tweet in Tweet.objects.all():
-			toRT = False
+		all_tweets = set()
+		for lol_tweet in Tweet.objects.filter(tweeter__in=folo_list_two):
+			all_tweets.add(lol_tweet)
+		for tweet in Tweet.objects.all():
+			tweet.is_rt = False
+			breakk = False
 			for a_tweet in all_tweets:
 				if a_tweet == tweet:
-					toRT = True
-			for follo in my_user_pro.following:
-				if not toRT:
-					for """
-		latest_tweet_list = all_tweets.order_by('-pub_date')[:5]
+					breakk = True
+			if not breakk:
+				for follo in folo_list_two:
+					for retweetable in tweet.retweet_set.all():
+						if not breakk:
+							if retweetable.r_user == follo:
+								tweet.is_rt = True
+								tweet.retweeter = follo.username
+								all_tweets.add(tweet)
+								breakk=True
+		#latest_tweet_list = all_tweets.order_by('-pub_date')[:5]
 		template = loader.get_template('twitterclone/home.html')
-		context = RequestContext(request, {'latest_tweet_list': latest_tweet_list,'username':request.user.username,})
+		context = RequestContext(request, {'latest_tweet_list': all_tweets,'username':request.user.username,})
 		return HttpResponse(template.render(context))
 	else:
 		return HttpResponseRedirect('/login')
@@ -193,7 +202,7 @@ def favorite(request,pk):
 def all_users(request):
 	user_list = UserPro.objects.all()
 	my_user=request.user
-	my_user_pro=my_user_pro =UserPro.objects.get(username=my_user.username)
+	my_user_pro=UserPro.objects.get(username=my_user.username)
 	my_following_list = my_user_pro.get_following()
 	not_following = user_list.exclude(username__in=my_following_list)
 	following_list = user_list.filter(username__in=my_following_list)
